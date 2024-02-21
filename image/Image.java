@@ -50,7 +50,7 @@ public class Image {
 
     public void saveImage(String fileName){
         // Initialize BufferedImage, assuming Color[][] is already properly populated.
-        BufferedImage bufferedImage = new BufferedImage(pixelArray.length, pixelArray[0].length,
+        BufferedImage bufferedImage = new BufferedImage(pixelArray[0].length, pixelArray.length,
                 BufferedImage.TYPE_INT_RGB);
         // Set each pixel of the BufferedImage to the color from the Color[][].
         for (int x = 0; x < pixelArray.length; x++) {

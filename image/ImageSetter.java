@@ -74,7 +74,7 @@ public class ImageSetter {
                 + c.getBlue() * BLUE_MULTIPICATOR;
     }
 
-    private double getSubImageBrightness(int x, int y) {
+    private double calculateSubImageBrightness(int x, int y) {
         Image subImnage = getSubImage(x, y);
         double greySum = 0;
         for (int row = 0; row < subImnage.getHeight(); row++) {

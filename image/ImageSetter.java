@@ -9,6 +9,7 @@ public class ImageSetter {
     private int subImageSize;
     private int imageResolution;
     private double[][] brightnessArray;
+    private SubImagesHistory history;
 
     private static final double RED_MULTIPICATOR = 0.2126;
     private static final double GREEN_MULTIPICATOR = 0.7152;
@@ -19,24 +20,22 @@ public class ImageSetter {
         height = getClosestPowerOfTwo(img.getHeight());
         width = getClosestPowerOfTwo(img.getWidth());
         image = padImage(img);
+        history = new SubImagesHistory();
     }
 
     public void updateResulotion(int res) {
+        history.saveSubImage(imageResolution, new BrightnessMemento(brightnessArray));
         subImageSize = width / res;
         imageResolution = res;
-        brightnessArray = new double[res][height / subImageSize];
-        for (double[] row : brightnessArray) {
-            for (double cell : row) {
-                cell = -1;
-            }
+        brightnessArray = history.getSubImageByResolution(res).brightnessArray;
+        if (brightnessArray == null) {
+            brightnessArray = new double[res][height / subImageSize];
+            updateBrightnessArray();
         }
     }
 
     public double getSubImageBrightness(int x, int y) {
-        if (brightnessArray[x][y] >= 0) {
-            return brightnessArray[x][y];
-        }
-        return calculateSubImageBrightness(x, y);
+        return brightnessArray[x][y];
     }
 
     private int getClosestPowerOfTwo(int num) {
@@ -93,6 +92,15 @@ public class ImageSetter {
         int pixelsInImag = subImnage.getHeight() * subImnage.getWidth();
         brightnessArray[x][y] = greySum / (pixelsInImag * MAX_RGB_VALUE);
         return brightnessArray[x][y];
+    }
+
+    private void updateBrightnessArray() {
+        int heightRes = height / subImageSize;
+        for (int i = 0; i < imageResolution; i++) {
+            for (int j = 0; j < heightRes; j++) {
+                brightnessArray[i][j] = calculateSubImageBrightness(i, j);
+            }
+        }
     }
 
     public static class BrightnessMemento {

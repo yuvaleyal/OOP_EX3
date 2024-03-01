@@ -12,6 +12,7 @@ public class ImageSetter {
     private static final double RED_MULTIPICATOR = 0.2126;
     private static final double GREEN_MULTIPICATOR = 0.7152;
     private static final double BLUE_MULTIPICATOR = 0.0722;
+    private static final int MAX_RGB_VALUE = 255;
 
     public ImageSetter(Image img) {
         height = getClosestPowerOfTwo(img.getHeight());
@@ -81,6 +82,7 @@ public class ImageSetter {
                 greySum += getGrey(subImnage.getPixel(row, col));
             }
         }
-
+        int pixelsInImag = subImnage.getHeight() * subImnage.getWidth();
+        return greySum / (pixelsInImag * MAX_RGB_VALUE);
     }
 }

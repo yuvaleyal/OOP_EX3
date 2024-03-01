@@ -1,6 +1,12 @@
 package image_char_matching;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
+
+import javax.swing.RowFilter.Entry;
 
 class SubImgCharMatcher {
     private TreeMap<Character, Double> charBrightnessMap;
@@ -14,6 +20,16 @@ class SubImgCharMatcher {
     }
 
     public char getCharByImageBrightness(double brightness) {
+        TreeSet<Double> brightnesSet = new TreeSet<Double>(charBrightnessMap.values());
+        double closestBrightnessFloor = brightnesSet.floor(brightness);
+        double closestBrightnessCeiling = brightnesSet.ceiling(brightness);
+        double newBrightness = getClosestBrightness(brightness, closestBrightnessFloor, closestBrightnessCeiling);
+        Set<Map.Entry<Character, Double>> charAndBrightnessSet = charBrightnessMap.entrySet();
+        for (Map.Entry<Character, Double> entry : charAndBrightnessSet) {
+            if (entry.getValue() == newBrightness) {
+                return entry.getKey();
+            }
+        }
         return ' ';
     }
 
@@ -59,4 +75,14 @@ class SubImgCharMatcher {
             value = (value - minBrightness) / (maxBrightness - minBrightness);
         }
     }
+
+    private double getClosestBrightness(double brightness, double floor, double ceiling) {
+        double floorDistanse = Math.abs(brightness - floor);
+        double ceilingDistanse = Math.abs(brightness - ceiling);
+        if (floorDistanse <= ceilingDistanse) {
+            return floor;
+        }
+        return ceiling;
+    }
+
 }

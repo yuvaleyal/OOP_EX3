@@ -8,6 +8,7 @@ public class ImageSetter {
     private int width;
     private int subImageSize;
     private int imageResolution;
+    private double[][] brightnessArray;
 
     private static final double RED_MULTIPICATOR = 0.2126;
     private static final double GREEN_MULTIPICATOR = 0.7152;
@@ -18,6 +19,24 @@ public class ImageSetter {
         height = getClosestPowerOfTwo(img.getHeight());
         width = getClosestPowerOfTwo(img.getWidth());
         image = padImage(img);
+    }
+
+    public void updateResulotion(int res) {
+        subImageSize = width / res;
+        imageResolution = res;
+        brightnessArray = new double[res][height / subImageSize];
+        for (double[] row : brightnessArray) {
+            for (double cell : row) {
+                cell = -1;
+            }
+        }
+    }
+
+    public double getSubImageBrightness(int x, int y) {
+        if (brightnessArray[x][y] >= 0) {
+            return brightnessArray[x][y];
+        }
+        return calculateSubImageBrightness(x, y);
     }
 
     private int getClosestPowerOfTwo(int num) {
@@ -43,17 +62,6 @@ public class ImageSetter {
             }
         }
         return new Image(pixelArray, width, height);
-    }
-
-    /**
-     * this function assume that res <= width, height and that res is a power of 2.
-     * 
-     * @param res
-     *            number of sub-pictures in a row
-     */
-    public void updateResulotion(int res) {
-        subImageSize = width / res;
-        imageResolution = res;
     }
 
     private Image getSubImage(int x, int y) {
@@ -83,6 +91,15 @@ public class ImageSetter {
             }
         }
         int pixelsInImag = subImnage.getHeight() * subImnage.getWidth();
-        return greySum / (pixelsInImag * MAX_RGB_VALUE);
+        brightnessArray[x][y] = greySum / (pixelsInImag * MAX_RGB_VALUE);
+        return brightnessArray[x][y];
+    }
+
+    public static class BrightnessMemento {
+        private final double[][] brightnessArray;
+
+        public BrightnessMemento(double[][] brightnessArray) {
+            this.brightnessArray = brightnessArray;
+        }
     }
 }

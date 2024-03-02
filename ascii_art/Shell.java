@@ -38,7 +38,6 @@ public class Shell {
     private final String OUTPUT_CONSOLE_STRING = "console";
     private final String OUTPUT_HTML_STRING = "html";
     private String outputString = OUTPUT_CONSOLE_STRING;
-    private HtmlAsciiOutput htmlAsciiOutput;
     private final int START_VALUE = 32;
     private final int END_VALUE = 126;
     private final char START_CHAR = (char)START_VALUE;
@@ -57,6 +56,15 @@ public class Shell {
     private final String IMAGE_STRING = "image";
     private final String OUTPUT_STRING_PREFIX = "output";
     private final String START_STRING = "asciiArt";
+    private final String CMD_ERROR = "Did not execute due to incorrect command.";
+    private final String ADD_ERROR = "Did not add due to incorrect format.";
+    private final String REMOVE_ERROR = "Did not remove due to incorrect format.";
+    private final String RES_BOUNDARIES_ERROR = "Did not change resolution due to exceeding boundaries.";
+    private final String RES_FORMAT_ERROR = "Did not change resolution due to incorrect format.";
+    private final String SET_RES_MESSEGE = "Resolution set to ";
+    private final String IMAGE_CMD_ERROR = "Did not execute due to problem with image file.";
+    private final String OUTPUT_ERROR = "Did not change output method due to incorrect format.";
+    private final String EMPTY_CHARSET_ERROR = "Did not execute. Charset is empty.";
     private Image image;
 
     
@@ -119,8 +127,6 @@ public class Shell {
                 }
                 // starting command
                 if (inputString.equals(START_STRING)) {
-                    // noodnik you need to add the code that acctully runs this shit, to do that you need to
-                    //create a instance of the class asciiArt
                     validCommandFlag = true;
                     if (start_cmd() == 0){
                         continue;
@@ -129,10 +135,10 @@ public class Shell {
                 }
                 
                 if (!validCommandFlag) {
-                    System.out.println("Did not execute due to incorrect command.");
+                    System.out.println(CMD_ERROR);
                 }
             } catch (Exception e) {
-                System.out.println("Did not execute due to incorrect command.");
+                System.out.println(CMD_ERROR);
             }
             System.out.print(PROMPT_STRING);
             inputString = KeyboardInput.readLine();
@@ -157,7 +163,7 @@ public class Shell {
                         char first = mainArg.charAt(0);
                         char last = mainArg.charAt(2);
                         if (first == last) {
-                            System.out.println("Did not add due to incorrect format.");
+                            System.out.println(ADD_ERROR);
                             return 1;
                         } else {
                             if (first < last) {
@@ -171,7 +177,7 @@ public class Shell {
                             }
                         }
                     } else if (mainArg.equals(ALL_STRING)) {
-                        // 32-124
+                        // 32-126
                         for (char letter = START_CHAR; letter <= END_CHAR; letter++) {
                             workingChars.addChar(letter);
                         }
@@ -179,7 +185,7 @@ public class Shell {
                         workingChars.addChar(' ');
                     } else {
                         if (mainArg.length() != 1 || !(mainArg.charAt(0) <= END_CHAR) || !(mainArg.charAt(0) >= START_CHAR)) {
-                            System.out.println("Did not add due to incorrect format.");
+                            System.out.println(ADD_ERROR);
                         } else {
                             char letter = mainArg.charAt(0);
                             workingChars.addChar(letter);
@@ -198,7 +204,7 @@ public class Shell {
                             char first = mainArg.charAt(0);
                             char last = mainArg.charAt(2);
                             if (first == last) {
-                                System.out.println("Did not remove due to incorrect format.");
+                                System.out.println(REMOVE_ERROR);
                                 return 1;
                             } else {
                                 if (first < last) {
@@ -219,7 +225,7 @@ public class Shell {
                         workingChars.removeChar(' ');
                     } else {
                         if (mainArg.length() != 1 && !(mainArg.charAt(0) <= END_CHAR) && !(mainArg.charAt(0) >= START_CHAR)) {
-                            System.out.println("Did not remove due to incorrect format.");
+                            System.out.println(REMOVE_ERROR);
                         } else {
                             char letter = mainArg.charAt(0);
                             workingChars.removeChar(letter);
@@ -236,19 +242,19 @@ public class Shell {
                     if ( mainArg.equals(RES_DOWN) ) {
                         if ( imageResolution / 2 > getMinWidthVal() ) {
                             imageResolution /= 2;
-                            System.out.println("Resolution set to " + imageResolution);
+                            System.out.println(SET_RES_MESSEGE + imageResolution);
                         } else {
-                            System.out.println("Did not change resolution due to exceeding boundaries.");
+                            System.out.println(RES_BOUNDARIES_ERROR);
                         }
                     } else if ( mainArg.equals(RES_UP) ) {
                         if (imageResolution * 2 > this.currentImage.getWidth()) {
                             imageResolution *= 2;
-                            System.out.println("Resolution set to " + imageResolution);
+                            System.out.println(SET_RES_MESSEGE + imageResolution);
                         } else {
-                            System.out.println("Did not change resolution due to exceeding boundaries.");
+                            System.out.println(RES_BOUNDARIES_ERROR);
                         }
                     } else {
-                        System.out.println("Did not change resolution due to incorrect format.");
+                        System.out.println(RES_FORMAT_ERROR);
                     }
     }
     private void image_cmd(String inputString) throws Exception{
@@ -260,7 +266,7 @@ public class Shell {
             this.image = test;
             this.currentImage = new ImageSetter(test);
         } catch (Exception e) {
-            System.out.println("Did not execute due to problem with image file.");
+            System.out.println(IMAGE_CMD_ERROR);
         }
     }
 
@@ -273,13 +279,13 @@ public class Shell {
                     } else if (mainArg.equals(OUTPUT_HTML_STRING)) {
                         outputString = OUTPUT_HTML_STRING;
                     } else {
-                        System.out.println("Did not change output method due to incorrect format.");
+                        System.out.println(OUTPUT_ERROR);
                     }
     }
 
     private int start_cmd() throws IOException{
         if (workingChars.getSize() == 0){
-            System.out.println("Did not execute. Charset is empty.");
+            System.out.println(EMPTY_CHARSET_ERROR);
             return 0;
         }
         this.asciiArtAlgorithm = new AsciiArtAlgorithm(this.image, imageResolution, workingChars);

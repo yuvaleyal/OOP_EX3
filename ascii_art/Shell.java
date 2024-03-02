@@ -8,6 +8,7 @@ import java.util.Collections;
 import ascii_art.KeyboardInput;
 import ascii_output.HtmlAsciiOutput;
 import image.Image;
+import image_char_matching.SubImgCharMatcher;
 
 /**
  * 1 exit - יציאה מהתוכנה.
@@ -23,7 +24,8 @@ import image.Image;
 
 public class Shell {
     // make it an array / arraylist or any other java collection
-    private ArrayList<String> workingChars = new ArrayList<>();
+    private SubImgCharMatcher workingChars = 
+    new SubImgCharMatcher(new char[]{'0','1','2','3','4','5','6','7','8','9'});
     private boolean validCommandFlag = false;
     private int imageResolution = 128;
     private Image currentImage;
@@ -64,13 +66,10 @@ public class Shell {
     
     public Shell() throws IOException {
        this.currentImage = new Image(DEFAULT_IMAGE);
+
     }
 
     public void run() throws Exception {
-        String[] arr = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
-        for (String item : arr) {
-            workingChars.add(item);
-        }
         System.out.print(PROMPT_STRING);
         String inputString = KeyboardInput.readLine();
         while (!(inputString.equals(EXIT_STRING))) {
@@ -115,15 +114,10 @@ public class Shell {
                 // starting command
                 if (inputString.equals(START_STRING)) {
                     // noodnik you need to add the code that acctully runs this shit, to do that you need to
-                    //create a instance of the class asciiArt 
+                    //create a instance of the class asciiArt
                     validCommandFlag = true;
-                    if (outputString.equals(OUTPUT_CONSOLE_STRING)) {
-                        System.out.println(OUTPUT_CONSOLE_STRING + "is selected");
-                    } else if (outputString.equals(OUTPUT_HTML_STRING)){
-                        System.out.println(OUTPUT_HTML_STRING + "is selected");
-                    } else {
-                        System.out.println("Invalid");
-                    }
+                    start_cmd();
+                    
                 }
                 
                 if (!validCommandFlag) {
@@ -139,8 +133,8 @@ public class Shell {
 
 
     private void chars_cmd(){
-        for(int i = 0; i < workingChars.size(); i++) {
-            System.out.print(workingChars.get(i));
+        for(int i = 0; i < workingChars.getSize(); i++) {
+            System.out.print(workingChars.(i));
             if (i + 1 < workingChars.size()) System.out.print(" ");
         }
         System.out.println();                    
@@ -199,7 +193,7 @@ public class Shell {
                             char first = mainArg.charAt(0);
                             char last = mainArg.charAt(2);
                             if (first == last) {
-                                System.out.println("Did not add due to incorrect format.");
+                                System.out.println("Did not remove due to incorrect format.");
                                 return 1;
                             } else {
                                 if (first < last) {
@@ -280,6 +274,15 @@ public class Shell {
                         System.out.println("Did not change output method due to incorrect format.");
                     }
     }
+
+    private int start_cmd(){
+        if (workingChars.size() == 0){
+            System.out.println("Did not execute. Charset is empty.");
+            return 0;
+        }
+
+    }
+    
     private void sortWorkingChars() {
         Collections.sort(workingChars);
     }

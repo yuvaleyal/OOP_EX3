@@ -153,4 +153,8 @@ public class SubImgCharMatcher {
         return ceiling;
     }
 
+    public int getSize(){
+        return charBrightnessMap.size();
+    }
+
 }

@@ -168,6 +168,10 @@ public class SubImgCharMatcher {
 
     private void normalValues() {
         for (Map.Entry<Character, Double> entry : charBrightnessMap.entrySet()) {
+            double newBrightness = defaultBrightness.get(entry.getKey());
+            charBrightnessMap.replace(entry.getKey(), newBrightness);
+        }
+        for (Map.Entry<Character, Double> entry : charBrightnessMap.entrySet()) {
             double newBrightness = normalBrightness(entry.getValue());
             charBrightnessMap.replace(entry.getKey(), newBrightness);
         }

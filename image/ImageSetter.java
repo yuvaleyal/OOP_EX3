@@ -16,6 +16,12 @@ public class ImageSetter {
     private static final double BLUE_MULTIPICATOR = 0.0722;
     private static final int MAX_RGB_VALUE = 255;
 
+    /**
+     * Constructs a new ImageSetter instance with the specified image.
+     *
+     * @param img
+     *            The image to be processed.
+     */
     public ImageSetter(Image img) {
         height = getClosestPowerOfTwo(img.getHeight());
         width = getClosestPowerOfTwo(img.getWidth());
@@ -24,6 +30,12 @@ public class ImageSetter {
         imageResolution = 1;
     }
 
+    /**
+     * Updates the resolution of the image for processing.
+     *
+     * @param res
+     *            The new resolution of the image.
+     */
     public void updateResulotion(int res) {
         if (res == imageResolution) {
             return;
@@ -38,6 +50,12 @@ public class ImageSetter {
         }
     }
 
+    /**
+     * Retrieves the brightness array representing the sub-images of the processed
+     * image.
+     *
+     * @return The brightness array representing the sub-images.
+     */
     public double[][] getSubImagesResolutions() {
         return brightnessArray;
     }
@@ -107,9 +125,18 @@ public class ImageSetter {
         }
     }
 
+    /**
+     * A memento class used to store the brightness array state.
+     */
     public static class BrightnessMemento {
         private final double[][] brightnessArray;
 
+        /**
+         * Constructs a new BrightnessMemento with the specified brightness array.
+         *
+         * @param brightnessArray
+         *            The brightness array to be stored in the memento.
+         */
         public BrightnessMemento(double[][] brightnessArray) {
             this.brightnessArray = brightnessArray;
         }

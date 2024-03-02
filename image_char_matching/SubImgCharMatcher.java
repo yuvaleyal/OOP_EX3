@@ -14,6 +14,12 @@ public class SubImgCharMatcher {
     private double maxBrightness;
     private double minBrightness;
 
+    /**
+     * Constructs a new SubImgCharMatcher instance with the specified character set.
+     *
+     * @param charset
+     *            The character set used for mapping pixel intensity to characters.
+     */
     public SubImgCharMatcher(char[] charset) {
         charBrightnessMap = new TreeMap<Character, Double>();
         defaultBrightness = new TreeMap<Character, Double>();
@@ -27,6 +33,13 @@ public class SubImgCharMatcher {
         normalValues();
     }
 
+    /**
+     * Retrieves the character corresponding to the provided image brightness.
+     *
+     * @param brightness
+     *            The brightness value of the image.
+     * @return The character corresponding to the provided brightness.
+     */
     public char getCharByImageBrightness(double brightness) {
         TreeSet<Double> brightnesSet = new TreeSet<Double>(charBrightnessMap.values());
         double closestBrightnessFloor = brightnesSet.floor(brightness);
@@ -43,6 +56,13 @@ public class SubImgCharMatcher {
         return ' ';
     }
 
+    /**
+     * Adds a character to the character set and updates brightness values if
+     * necessary.
+     *
+     * @param c
+     *            The character to be added to the character set.
+     */
     public void addChar(char c) {
         insertChar(c);
         double cBrightness = charBrightnessMap.get(c);
@@ -58,6 +78,13 @@ public class SubImgCharMatcher {
         }
     }
 
+    /**
+     * Removes a character from the character set and updates brightness values if
+     * necessary.
+     *
+     * @param c
+     *            The character to be removed from the character set.
+     */
     public void removeChar(char c) {
         double cBrightness = charBrightnessMap.get(c);
         charBrightnessMap.remove(c);

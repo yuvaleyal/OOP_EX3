@@ -1,12 +1,9 @@
 package image_char_matching;
 
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-
-import javax.swing.RowFilter.Entry;
 
 public class SubImgCharMatcher {
     private TreeMap<Character, Double> charBrightnessMap;
@@ -96,6 +93,15 @@ public class SubImgCharMatcher {
             updateMinBrightness();
             normalValues();
         }
+    }
+
+    /**
+     * Retrieves all characters in the character set.
+     *
+     * @return A TreeSet containing all characters in the character set.
+     */
+    public TreeSet<Character> getAllChars() {
+        return new TreeSet<Character>(charBrightnessMap.keySet());
     }
 
     private double getCharBrightness(char c) {

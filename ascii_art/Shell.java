@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.TreeSet;
+
 
 import ascii_art.KeyboardInput;
 import ascii_output.HtmlAsciiOutput;
 import image.Image;
 import image_char_matching.SubImgCharMatcher;
+import image.ImageSetter;
 
 /**
  * 1 exit - יציאה מהתוכנה.
@@ -28,7 +31,7 @@ public class Shell {
     new SubImgCharMatcher(new char[]{'0','1','2','3','4','5','6','7','8','9'});
     private boolean validCommandFlag = false;
     private int imageResolution = 128;
-    private Image currentImage;
+    private ImageSetter currentImage;
     private final String OUTPUT_CONSOLE_STRING = "console";
     private final String OUTPUT_HTML_STRING = "html";
     private String outputString = OUTPUT_CONSOLE_STRING;
@@ -65,7 +68,7 @@ public class Shell {
     }
     
     public Shell() throws IOException {
-       this.currentImage = new Image(DEFAULT_IMAGE);
+       this.currentImage = new ImageSetter(new Image(DEFAULT_IMAGE));
 
     }
 
@@ -77,7 +80,7 @@ public class Shell {
                 // chars command
                 if (inputString.startsWith(CHARS_STRING)) {
                     validCommandFlag = true;
-                    chars_cmd();
+                    chars_cmd(workingChars.getAllChars());
                 }
                 // add command
                 if (inputString.startsWith(ADD_STRING_PREFIX)) {
@@ -132,12 +135,12 @@ public class Shell {
     }
 
 
-    private void chars_cmd(){
-        for(int i = 0; i < workingChars.getSize(); i++) {
-            System.out.print(workingChars.(i));
-            if (i + 1 < workingChars.size()) System.out.print(" ");
-        }
-        System.out.println();                    
+    private void chars_cmd(TreeSet<Character> treeSet){
+            for (Character ch:treeSet){
+                System.out.print(ch);
+                System.out.println(" ");
+            }
+            System.out.println();
         }
     
     private int add_cmd(String inputString) throws Exception{
@@ -153,34 +156,30 @@ public class Shell {
                         } else {
                             if (first < last) {
                                 for (char letter = first; letter <= last; letter++) {
-                                    String s = letter + "";
-                                    if (!workingChars.contains(s)) workingChars.add(s);
+                                    workingChars.addChar(letter);
                                 }
                             } else {
                                 for (char letter = first; letter >= last; letter--) {
-                                    String s = letter + "";
-                                    if (!workingChars.contains(s)) workingChars.add(s);
+                                    workingChars.addChar(letter);
                                 }
                             }
                         }
                     } else if (mainArg.equals(ALL_STRING)) {
                         // 32-124
                         for (char letter = START_CHAR; letter <= END_CHAR; letter++) {
-                            String s = letter + "";
-                            if (!workingChars.contains(s)) workingChars.add(s);
+                            workingChars.addChar(letter);
                         }
                     } else if (mainArg.equals(SPACE_STRING)) {
-                        String s = " ";
-                        if (!workingChars.contains(s)) workingChars.add(s);
+                        workingChars.addChar(' ');
                     } else {
                         if (mainArg.length() != 1 && !(mainArg.charAt(0) <= END_CHAR) && !(mainArg.charAt(0) >= START_CHAR)) {
                             System.out.println("Did not add due to incorrect format.");
                         } else {
-                            if (!workingChars.contains(mainArg)) workingChars.add(mainArg);
+                            char letter = mainArg.charAt(0);
+                            workingChars.addChar(letter);
                         }
                         
                     }
-                    sortWorkingChars();
                     return 0;
     }
 
@@ -198,31 +197,28 @@ public class Shell {
                             } else {
                                 if (first < last) {
                                     for (char letter = first; letter <= last; letter++) {
-                                        String s = letter + "";
-                                        if (workingChars.contains(s)) workingChars.remove(s);
+                                        workingChars.removeChar(letter);
                                     }
                                 } else {
                                     for (char letter = first; letter >= last; letter--) {
-                                        String s = letter + "";
-                                        if (workingChars.contains(s)) workingChars.remove(s);
+                                        workingChars.removeChar(letter);
                                     }
                                 }
                             }
                         }
                     } else if (mainArg.equals(ALL_STRING)) {
                         // 32-124
-                        workingChars = new ArrayList<>();
+                        workingChars.removeAllChars();
                     } else if (mainArg.equals(SPACE_STRING)) {
-                        String s = " ";
-                        if (workingChars.contains(s)) workingChars.remove(s);
+                        workingChars.removeChar(' ');
                     } else {
                         if (mainArg.length() != 1 && !(mainArg.charAt(0) <= END_CHAR) && !(mainArg.charAt(0) >= START_CHAR)) {
                             System.out.println("Did not remove due to incorrect format.");
                         } else {
-                            if (workingChars.contains(mainArg)) workingChars.remove(mainArg);
+                            char letter = mainArg.charAt(0);
+                            workingChars.removeChar(letter);
                         }
                     }
-                    sortWorkingChars();
                     return 0;
     }
 
@@ -234,6 +230,7 @@ public class Shell {
                     if ( mainArg.equals(RES_DOWN) ) {
                         if ( imageResolution / 2 > getMinWidthVal() ) {
                             imageResolution /= 2;
+                            this.currentImage.updateResulotion(imageResolution);
                             System.out.println("Resolution set to " + imageResolution);
                         } else {
                             System.out.println("Did not change resolution due to exceeding boundaries.");
@@ -241,6 +238,7 @@ public class Shell {
                     } else if ( mainArg.equals(RES_UP) ) {
                         if (imageResolution * 2 > this.currentImage.getWidth()) {
                             imageResolution *= 2;
+                            this.currentImage.updateResulotion(imageResolution);
                             System.out.println("Resolution set to " + imageResolution);
                         } else {
                             System.out.println("Did not change resolution due to exceeding boundaries.");
@@ -255,7 +253,7 @@ public class Shell {
         String mainArg = args[1];
         try {
             Image test = new Image(mainArg);
-            this.currentImage = test;
+            this.currentImage = new ImageSetter(test);
         } catch (Exception e) {
             System.out.println("Did not execute due to problem with image file.");
         }
@@ -276,15 +274,11 @@ public class Shell {
     }
 
     private int start_cmd(){
-        if (workingChars.size() == 0){
+        if (workingChars.getSize() == 0){
             System.out.println("Did not execute. Charset is empty.");
             return 0;
         }
-
-    }
-    
-    private void sortWorkingChars() {
-        Collections.sort(workingChars);
+        
     }
 
     private int getMinWidthVal() {

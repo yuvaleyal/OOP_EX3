@@ -60,6 +60,25 @@ public class ImageSetter {
         return brightnessArray;
     }
 
+
+    /**
+     * Retrieves the width of the image.
+     *
+     * @return The width of the image.
+     */
+    public int getWidth(){
+        return this.width;
+    }
+
+    /**
+     * Retrieves the height of the image.
+     *
+     * @return The height of the image.
+     */
+    public int getHeight(){
+        return this.height;
+    }
+
     private int getClosestPowerOfTwo(int num) {
         double logNum = Math.log(num) / Math.log(2);
         return (int) Math.ceil(Math.pow(2, logNum));

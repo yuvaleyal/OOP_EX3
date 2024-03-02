@@ -104,6 +104,25 @@ public class SubImgCharMatcher {
         return new TreeSet<Character>(charBrightnessMap.keySet());
     }
 
+    /**
+     * Returns the number of characters stored in the charBrightnessMap.
+     *
+     * @return The number of characters stored in the charBrightnessMap.
+     */
+    public int getSize(){
+        return charBrightnessMap.size();
+    }
+
+    /**
+     * Removes all characters from the charBrightnessMap and resets other brightness-related attributes.
+     */
+    public void removeAllChars(){
+        charBrightnessMap = new TreeMap<Character, Double>();
+        defaultBrightness = new TreeMap<Character, Double>();
+        minBrightness = 1;
+        maxBrightness = 0;
+    }
+
     private double getCharBrightness(char c) {
         boolean[][] cImg = CharConverter.convertToBoolArray(c);
         int trueCounter = 0;
@@ -159,8 +178,5 @@ public class SubImgCharMatcher {
         return ceiling;
     }
 
-    public int getSize(){
-        return charBrightnessMap.size();
-    }
 
 }

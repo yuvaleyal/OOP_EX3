@@ -11,6 +11,8 @@ public class SubImgCharMatcher {
     private double maxBrightness;
     private double minBrightness;
 
+    private static int MAX_BRIGHTNESS = 16;
+
     /**
      * Constructs a new SubImgCharMatcher instance with the specified character set.
      *
@@ -23,7 +25,7 @@ public class SubImgCharMatcher {
         for (char c : charset) {
             insertChar(c);
         }
-        minBrightness = 1;
+        minBrightness = MAX_BRIGHTNESS;
         updateMinBrightness();
         maxBrightness = 0;
         updateMaxBrightness();
@@ -109,14 +111,15 @@ public class SubImgCharMatcher {
      *
      * @return The number of characters stored in the charBrightnessMap.
      */
-    public int getSize(){
+    public int getSize() {
         return charBrightnessMap.size();
     }
 
     /**
-     * Removes all characters from the charBrightnessMap and resets other brightness-related attributes.
+     * Removes all characters from the charBrightnessMap and resets other
+     * brightness-related attributes.
      */
-    public void removeAllChars(){
+    public void removeAllChars() {
         charBrightnessMap = new TreeMap<Character, Double>();
         defaultBrightness = new TreeMap<Character, Double>();
         minBrightness = 1;
@@ -165,7 +168,8 @@ public class SubImgCharMatcher {
 
     private void normalValues() {
         for (Map.Entry<Character, Double> entry : charBrightnessMap.entrySet()) {
-            charBrightnessMap.replace(entry.getKey(), normalBrightness(entry.getValue()));
+            double newBrightness = normalBrightness(entry.getValue());
+            charBrightnessMap.replace(entry.getKey(), newBrightness);
         }
     }
 
@@ -177,6 +181,5 @@ public class SubImgCharMatcher {
         }
         return ceiling;
     }
-
 
 }

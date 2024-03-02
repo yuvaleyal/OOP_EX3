@@ -8,12 +8,28 @@ public class AsciiArtAlgorithm {
     private ImageSetter image;
     private SubImgCharMatcher charSet;
 
+    /**
+     * Constructs a new AsciiArtAlgorithm instance with the specified parameters.
+     *
+     * @param img
+     *            The image to be processed.
+     * @param res
+     *            The resolution of the output ASCII art.
+     * @param chars
+     *            The character set used for mapping pixel intensity to characters.
+     */
     public AsciiArtAlgorithm(Image img, int res, SubImgCharMatcher chars) {
         image = new ImageSetter(img);
         image.updateResulotion(res);
         charSet = chars;
     }
 
+    /**
+     * Runs the ASCII art algorithm to generate the ASCII representation of the
+     * input image.
+     *
+     * @return A two-dimensional array representing the ASCII art.
+     */
     public char[][] run() {
         double[][] dividedImg = image.getSubImagesResolutions();
         int height = dividedImg[0].length;

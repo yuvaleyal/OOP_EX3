@@ -57,6 +57,7 @@ public class Shell {
     private final String IMAGE_STRING = "image";
     private final String OUTPUT_STRING_PREFIX = "output";
     private final String START_STRING = "asciiArt";
+    private Image image;
 
     
     private enum ERROR_CODES {
@@ -70,8 +71,8 @@ public class Shell {
     }
     
     public Shell() throws IOException {
-       this.currentImage = new ImageSetter(new Image(DEFAULT_IMAGE));
-
+        this.currentImage = new ImageSetter(new Image(DEFAULT_IMAGE));
+        this.image = new Image(DEFAULT_IMAGE);
     }
 
     public void run() throws Exception {
@@ -256,6 +257,7 @@ public class Shell {
         String mainArg = args[1];
         try {
             Image test = new Image(mainArg);
+            this.image = test;
             this.currentImage = new ImageSetter(test);
         } catch (Exception e) {
             System.out.println("Did not execute due to problem with image file.");
@@ -280,7 +282,7 @@ public class Shell {
             System.out.println("Did not execute. Charset is empty.");
             return 0;
         }
-        this.asciiArtAlgorithm = new AsciiArtAlgorithm(new Image(DEFAULT_IMAGE), imageResolution, workingChars);
+        this.asciiArtAlgorithm = new AsciiArtAlgorithm(this.image, imageResolution, workingChars);
         char[][] result = this.asciiArtAlgorithm.run();
         OutputFactory factory = new OutputFactory();
         AsciiOutput output = factory.getOutputMethod(outputString);

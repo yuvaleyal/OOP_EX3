@@ -24,6 +24,9 @@ public class ImageSetter {
     }
 
     public void updateResulotion(int res) {
+        if (res == imageResolution) {
+            return;
+        }
         history.saveSubImage(imageResolution, new BrightnessMemento(brightnessArray));
         subImageSize = width / res;
         imageResolution = res;

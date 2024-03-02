@@ -31,8 +31,10 @@ class SubImgCharMatcher {
         TreeSet<Double> brightnesSet = new TreeSet<Double>(charBrightnessMap.values());
         double closestBrightnessFloor = brightnesSet.floor(brightness);
         double closestBrightnessCeiling = brightnesSet.ceiling(brightness);
-        double newBrightness = getClosestBrightness(brightness, closestBrightnessFloor, closestBrightnessCeiling);
-        Set<Map.Entry<Character, Double>> charAndBrightnessSet = charBrightnessMap.entrySet();
+        double newBrightness = getClosestBrightness(brightness, closestBrightnessFloor,
+                closestBrightnessCeiling);
+        Set<Map.Entry<Character, Double>> charAndBrightnessSet = charBrightnessMap
+                .entrySet();
         for (Map.Entry<Character, Double> entry : charAndBrightnessSet) {
             if (entry.getValue() == newBrightness) {
                 return entry.getKey();

@@ -1,30 +1,74 @@
 package image_char_matching;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
+
+import javax.swing.RowFilter.Entry;
 
 class SubImgCharMatcher {
     private TreeMap<Character, Double> charBrightnessMap;
+    private TreeMap<Character, Double> defaultBrightness;
+    private double maxBrightness;
+    private double minBrightness;
 
     public SubImgCharMatcher(char[] charset) {
         charBrightnessMap = new TreeMap<Character, Double>();
+        defaultBrightness = new TreeMap<Character, Double>();
         for (char c : charset) {
             insertChar(c);
         }
+        minBrightness = 1;
+        updateMinBrightness();
+        maxBrightness = 0;
+        updateMaxBrightness();
         normalValues();
     }
 
     public char getCharByImageBrightness(double brightness) {
+        TreeSet<Double> brightnesSet = new TreeSet<Double>(charBrightnessMap.values());
+        double closestBrightnessFloor = brightnesSet.floor(brightness);
+        double closestBrightnessCeiling = brightnesSet.ceiling(brightness);
+        double newBrightness = getClosestBrightness(brightness, closestBrightnessFloor,
+                closestBrightnessCeiling);
+        Set<Map.Entry<Character, Double>> charAndBrightnessSet = charBrightnessMap
+                .entrySet();
+        for (Map.Entry<Character, Double> entry : charAndBrightnessSet) {
+            if (entry.getValue() == newBrightness) {
+                return entry.getKey();
+            }
+        }
         return ' ';
     }
 
     public void addChar(char c) {
         insertChar(c);
-        normalValues();
+        double cBrightness = charBrightnessMap.get(c);
+        if (cBrightness > maxBrightness) {
+            maxBrightness = cBrightness;
+            normalValues();
+        }
+        if (cBrightness < minBrightness) {
+            minBrightness = cBrightness;
+            normalValues();
+        } else {
+            charBrightnessMap.replace(c, normalBrightness(cBrightness));
+        }
     }
 
     public void removeChar(char c) {
+        double cBrightness = charBrightnessMap.get(c);
         charBrightnessMap.remove(c);
-        normalValues();
+        if (cBrightness == maxBrightness) {
+            updateMaxBrightness();
+            normalValues();
+        }
+        if (cBrightness == minBrightness) {
+            updateMinBrightness();
+            normalValues();
+        }
     }
 
     private double getCharBrightness(char c) {
@@ -41,22 +85,45 @@ class SubImgCharMatcher {
     }
 
     private void insertChar(char c) {
-        charBrightnessMap.put(c, getCharBrightness(c));
+        if (!defaultBrightness.containsKey(c)) {
+            defaultBrightness.put(c, getCharBrightness(c));
+        }
+        charBrightnessMap.put(c, defaultBrightness.get(c));
     }
 
-    private void normalValues() {
-        double minBrightness = 1;
-        double maxBrightness = 0;
+    private double normalBrightness(double brightness) {
+        return (brightness - minBrightness) / (maxBrightness - minBrightness);
+    }
+
+    private void updateMinBrightness() {
         for (double value : charBrightnessMap.values()) {
             if (value < minBrightness) {
                 minBrightness = value;
             }
+        }
+    }
+
+    private void updateMaxBrightness() {
+        for (double value : charBrightnessMap.values()) {
             if (value > maxBrightness) {
                 maxBrightness = value;
             }
         }
-        for (double value : charBrightnessMap.values()) {
-            value = (value - minBrightness) / (maxBrightness - minBrightness);
+    }
+
+    private void normalValues() {
+        for (Map.Entry<Character, Double> entry : charBrightnessMap.entrySet()) {
+            charBrightnessMap.replace(entry.getKey(), normalBrightness(entry.getValue()));
         }
     }
+
+    private double getClosestBrightness(double brightness, double floor, double ceiling) {
+        double floorDistanse = Math.abs(brightness - floor);
+        double ceilingDistanse = Math.abs(brightness - ceiling);
+        if (floorDistanse <= ceilingDistanse) {
+            return floor;
+        }
+        return ceiling;
+    }
+
 }

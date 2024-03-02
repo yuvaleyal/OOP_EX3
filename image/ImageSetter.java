@@ -43,10 +43,12 @@ public class ImageSetter {
         history.saveSubImage(imageResolution, new BrightnessMemento(brightnessArray));
         subImageSize = width / res;
         imageResolution = res;
-        brightnessArray = history.getSubImageByResolution(res).brightnessArray;
-        if (brightnessArray == null) {
+        BrightnessMemento brightnessArrayMemento = history.getSubImageByResolution(res);
+        if (brightnessArrayMemento == null) {
             brightnessArray = new double[res][height / subImageSize];
             updateBrightnessArray();
+        } else {
+            brightnessArray = brightnessArrayMemento.brightnessArray;
         }
     }
 
@@ -60,13 +62,12 @@ public class ImageSetter {
         return brightnessArray;
     }
 
-
     /**
      * Retrieves the width of the image.
      *
      * @return The width of the image.
      */
-    public int getWidth(){
+    public int getWidth() {
         return this.width;
     }
 
@@ -75,13 +76,13 @@ public class ImageSetter {
      *
      * @return The height of the image.
      */
-    public int getHeight(){
+    public int getHeight() {
         return this.height;
     }
 
     private int getClosestPowerOfTwo(int num) {
         double logNum = Math.log(num) / Math.log(2);
-        return (int) Math.ceil(Math.pow(2, logNum));
+        return (int) (Math.pow(2, Math.ceil(logNum)));
     }
 
     private Image padImage(Image image) {

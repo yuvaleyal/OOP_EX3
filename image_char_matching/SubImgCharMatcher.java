@@ -8,7 +8,7 @@ import java.util.TreeSet;
 
 import javax.swing.RowFilter.Entry;
 
-class SubImgCharMatcher {
+public class SubImgCharMatcher {
     private TreeMap<Character, Double> charBrightnessMap;
     private TreeMap<Character, Double> defaultBrightness;
     private double maxBrightness;

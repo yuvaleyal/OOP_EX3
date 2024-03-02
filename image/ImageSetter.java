@@ -21,6 +21,7 @@ public class ImageSetter {
         width = getClosestPowerOfTwo(img.getWidth());
         image = padImage(img);
         history = new SubImagesHistory();
+        imageResolution = 1;
     }
 
     public void updateResulotion(int res) {
@@ -37,8 +38,8 @@ public class ImageSetter {
         }
     }
 
-    public double getSubImageBrightness(int x, int y) {
-        return brightnessArray[x][y];
+    public double[][] getSubImagesResolutions() {
+        return brightnessArray;
     }
 
     private int getClosestPowerOfTwo(int num) {
@@ -99,9 +100,9 @@ public class ImageSetter {
 
     private void updateBrightnessArray() {
         int heightRes = height / subImageSize;
-        for (int i = 0; i < imageResolution; i++) {
-            for (int j = 0; j < heightRes; j++) {
-                brightnessArray[i][j] = calculateSubImageBrightness(i, j);
+        for (int row = 0; row < heightRes; row++) {
+            for (int col = 0; col < imageResolution; col++) {
+                brightnessArray[row][col] = calculateSubImageBrightness(row, col);
             }
         }
     }

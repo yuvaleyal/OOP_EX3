@@ -1,69 +1,290 @@
 package ascii_art;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
 import ascii_art.KeyboardInput;
+import ascii_output.HtmlAsciiOutput;
+import image.Image;
 
 /**
-1 exit - יציאה מהתוכנה.
-.2 chars -צפייה במאגר התווים הנוכחי.
-.3 add - הוספה תווים לסט התווים הנוכחי.
-.4 remove - הסרה של תווים מסט התווים הנוכחי.
-.5 res - שליטה ברזולוציה של התמונה שלנו – הגדלה והקטנה של הרזולוציה.
-.6 image - בחירת קובץ תמונה.
-.7 output - בחירת ה-Output – אם התוצר יודפס ל-console או לחילופין יוחזר כקובץ html
-.8 asciiArt - הרצת האלגוריתם על הפרמטרים הנוכחיים.
+ * 1 exit - יציאה מהתוכנה.
+ * .2 chars -צפייה במאגר התווים הנוכחי.
+ * .3 add - הוספה תווים לסט התווים הנוכחי.
+ * .4 remove - הסרה של תווים מסט התווים הנוכחי.
+ * .5 res - שליטה ברזולוציה של התמונה שלנו – הגדלה והקטנה של הרזולוציה.
+ * .6 image - בחירת קובץ תמונה.
+ * .7 output - בחירת ה-Output – אם התוצר יודפס ל-console או לחילופין יוחזר כקובץ
+ * html
+ * .8 asciiArt - הרצת האלגוריתם על הפרמטרים הנוכחיים.
  */
-
 
 public class Shell {
     // make it an array / arraylist or any other java collection
-    private String[] workingChars = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
-    private final String PROMPT_STRING =          ">>> ";
-    private final String EXIT_STRING =          "exit";
-    private final String CHARS_STRING =         "chars";
-    private final String ADD_STRING_PREFIX =    "add";
+    private ArrayList<String> workingChars = new ArrayList<>();
+    private boolean validCommandFlag = false;
+    private int imageResolution = 128;
+    private Image currentImage;
+    private final String OUTPUT_CONSOLE_STRING = "console";
+    private final String OUTPUT_HTML_STRING = "html";
+    private String outputString = OUTPUT_CONSOLE_STRING;
+    private HtmlAsciiOutput htmlAsciiOutput;
+    private final int START_VALUE = 32;
+    private final int END_VALUE = 126;
+    private final char START_CHAR = (char)START_VALUE;
+    private final char END_CHAR =   (char)END_VALUE;
+    private final String DEFAULT_IMAGE = "examples\\cat.jpeg";
+    private final String SPACE_STRING = "space";
+    private final String ALL_STRING = "all";
+    private final String PROMPT_STRING = ">>> ";
+    private final String EXIT_STRING = "exit";
+    private final String CHARS_STRING = "chars";
+    private final String ADD_STRING_PREFIX = "add";
     private final String REMOVE_STRING_PREFIX = "remove";
-    private final String RES_STRING_PREFIX =    "res";
-    private final String IMAGE_STRING =         "image";
+    private final String RES_STRING_PREFIX = "res";
+    private final String RES_DOWN = "down";
+    private final String RES_UP = "up";
+    private final String IMAGE_STRING = "image";
     private final String OUTPUT_STRING_PREFIX = "output";
-    private final String START_STRING =         "asciiArt";
+    private final String START_STRING = "asciiArt";
+    private final String DEFAULTFONT = "Courier New";
+    private final String DEFAULTHTMLFILENAME = "out.html";
+    
     private enum ERROR_CODES {
         TOO_MANY_ARGS,
         INVALID_ARGS,
     }
 
-    public Shell() {
-
+    public static void main(String[] args) throws Exception{
+        Shell s = new Shell();
+        s.run();
     }
-    public void run() {
+    
+    public Shell() throws IOException {
+       this.currentImage = new Image(DEFAULT_IMAGE);
+    }
+
+    public void run() throws Exception {
+        String[] arr = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
+        for (String item : arr) {
+            workingChars.add(item);
+        }
         System.out.print(PROMPT_STRING);
         String inputString = KeyboardInput.readLine();
         while (!(inputString.equals(EXIT_STRING))) {
             try {
-                System.out.println();
+                // chars command
                 if (inputString.startsWith(CHARS_STRING)) {
-                    for(int i = 0; i < workingChars.length; i++) {
-                        System.out.print(workingChars[i]);
-                        if (i + 1 < workingChars.length) System.out.print(" ");
+                    validCommandFlag = true;
+                    chars_cmd();
+                }
+                // add command
+                if (inputString.startsWith(ADD_STRING_PREFIX)) {
+                    validCommandFlag = true;
+                    int flag = 0;
+                    flag = add_cmd(inputString);
+                    if (flag == 1){
+                        continue;
                     }
-                    System.out.println();                    
+                } 
+                // remove command
+                if (inputString.startsWith(REMOVE_STRING_PREFIX)) {
+                    validCommandFlag = true;
+                    int flag = remove_cmd(inputString);
+                    if (flag == 1){
+                        continue;
+                    }
+                }
+                // res command
+                if (inputString.startsWith(RES_STRING_PREFIX)) {
+                    validCommandFlag = true;
+                    res_cmd(inputString);
+                }
+                // image command
+                if (inputString.startsWith(IMAGE_STRING)) {
+                    validCommandFlag = true;
+                    image_cmd(inputString);
+                }
+                // change output command
+                if (inputString.startsWith(OUTPUT_STRING_PREFIX)) {
+                    validCommandFlag = true;
+                    output_cmd(inputString);
+                }
+                // starting command
+                if (inputString.equals(START_STRING)) {
+                    // noodnik you need to add the code that acctully runs this shit, to do that you need to
+                    //create a instance of the class asciiArt 
+                    validCommandFlag = true;
+                    if (outputString.equals(OUTPUT_CONSOLE_STRING)) {
+                        System.out.println(OUTPUT_CONSOLE_STRING + "is selected");
+                    } else if (outputString.equals(OUTPUT_HTML_STRING)){
+                        System.out.println(OUTPUT_HTML_STRING + "is selected");
+                    } else {
+                        System.out.println("Invalid");
+                    }
                 }
                 
-                if (inputString.startsWith(ADD_STRING_PREFIX)) {
-                    String[] args = inputString.split(" ");
-                    if (args.length > 2) throw new Exception(ERROR_CODES.TOO_MANY_ARGS + "");
-                    String mainArg = args[1];
-                    if (mainArg.charAt(1) == '-') {
-                        for (int i = 0; i < args.length; i++) {
-                            workingChars.
-                        }
-                    }
-                } else {
-                    
-                }                
+                if (!validCommandFlag) {
+                    System.out.println("Did not execute due to incorrect command.");
+                }
             } catch (Exception e) {
                 System.out.println("Error accoured");
-
             }
             System.out.print(PROMPT_STRING);
+            inputString = KeyboardInput.readLine();
         }
+    }
+
+
+    private void chars_cmd(){
+        for(int i = 0; i < workingChars.size(); i++) {
+            System.out.print(workingChars.get(i));
+            if (i + 1 < workingChars.size()) System.out.print(" ");
+        }
+        System.out.println();                    
+        }
+    
+    private int add_cmd(String inputString) throws Exception{
+        String[] args = inputString.split("\\s+");
+                    if (args.length > 2) throw new Exception(ERROR_CODES.TOO_MANY_ARGS + "");
+                    String mainArg = args[1];
+                    if (mainArg.length() > 1 && mainArg.charAt(1) == '-') {
+                        char first = mainArg.charAt(0);
+                        char last = mainArg.charAt(2);
+                        if (first == last) {
+                            System.out.println("Did not add due to incorrect format.");
+                            return 1;
+                        } else {
+                            if (first < last) {
+                                for (char letter = first; letter <= last; letter++) {
+                                    String s = letter + "";
+                                    if (!workingChars.contains(s)) workingChars.add(s);
+                                }
+                            } else {
+                                for (char letter = first; letter >= last; letter--) {
+                                    String s = letter + "";
+                                    if (!workingChars.contains(s)) workingChars.add(s);
+                                }
+                            }
+                        }
+                    } else if (mainArg.equals(ALL_STRING)) {
+                        // 32-124
+                        for (char letter = START_CHAR; letter <= END_CHAR; letter++) {
+                            String s = letter + "";
+                            if (!workingChars.contains(s)) workingChars.add(s);
+                        }
+                    } else if (mainArg.equals(SPACE_STRING)) {
+                        String s = " ";
+                        if (!workingChars.contains(s)) workingChars.add(s);
+                    } else {
+                        if (mainArg.length() != 1 && !(mainArg.charAt(0) <= END_CHAR) && !(mainArg.charAt(0) >= START_CHAR)) {
+                            System.out.println("Did not add due to incorrect format.");
+                        } else {
+                            if (!workingChars.contains(mainArg)) workingChars.add(mainArg);
+                        }
+                        
+                    }
+                    sortWorkingChars();
+                    return 0;
+    }
+
+    private int remove_cmd(String inputString) throws Exception{
+        String[] args = inputString.split(" ");
+                    if (args.length > 2) throw new Exception(ERROR_CODES.TOO_MANY_ARGS + "");
+                    String mainArg = args[1];
+                    if (mainArg.length() > 1 && mainArg.charAt(1) == '-') {
+                        for (int i = 0; i < args.length; i++) {
+                            char first = mainArg.charAt(0);
+                            char last = mainArg.charAt(2);
+                            if (first == last) {
+                                System.out.println("Did not add due to incorrect format.");
+                                return 1;
+                            } else {
+                                if (first < last) {
+                                    for (char letter = first; letter <= last; letter++) {
+                                        String s = letter + "";
+                                        if (workingChars.contains(s)) workingChars.remove(s);
+                                    }
+                                } else {
+                                    for (char letter = first; letter >= last; letter--) {
+                                        String s = letter + "";
+                                        if (workingChars.contains(s)) workingChars.remove(s);
+                                    }
+                                }
+                            }
+                        }
+                    } else if (mainArg.equals(ALL_STRING)) {
+                        // 32-124
+                        workingChars = new ArrayList<>();
+                    } else if (mainArg.equals(SPACE_STRING)) {
+                        String s = " ";
+                        if (workingChars.contains(s)) workingChars.remove(s);
+                    } else {
+                        if (mainArg.length() != 1 && !(mainArg.charAt(0) <= END_CHAR) && !(mainArg.charAt(0) >= START_CHAR)) {
+                            System.out.println("Did not remove due to incorrect format.");
+                        } else {
+                            if (workingChars.contains(mainArg)) workingChars.remove(mainArg);
+                        }
+                    }
+                    sortWorkingChars();
+                    return 0;
+    }
+
+    private void res_cmd(String inputString) throws Exception{
+        String[] args = inputString.split(" ");
+                    if (args.length > 2) throw new Exception(ERROR_CODES.TOO_MANY_ARGS + "");
+                    String mainArg = args[1];
+                    // Resolution set to 
+                    if ( mainArg.equals(RES_DOWN) ) {
+                        if ( imageResolution / 2 > getMinWidthVal() ) {
+                            imageResolution /= 2;
+                            System.out.println("Resolution set to " + imageResolution);
+                        } else {
+                            System.out.println("Did not change resolution due to exceeding boundaries.");
+                        }
+                    } else if ( mainArg.equals(RES_UP) ) {
+                        if (imageResolution * 2 > this.currentImage.getWidth()) {
+                            imageResolution *= 2;
+                            System.out.println("Resolution set to " + imageResolution);
+                        } else {
+                            System.out.println("Did not change resolution due to exceeding boundaries.");
+                        }
+                    } else {
+                        System.out.println("Did not change resolution due to incorrect format.");
+                    }
+    }
+    private void image_cmd(String inputString) throws Exception{
+        String[] args = inputString.split(" ");
+        if (args.length > 2) throw new Exception(ERROR_CODES.TOO_MANY_ARGS + "");
+        String mainArg = args[1];
+        try {
+            Image test = new Image(mainArg);
+            this.currentImage = test;
+        } catch (Exception e) {
+            System.out.println("Did not execute due to problem with image file.");
+        }
+    }
+
+    private void output_cmd(String inputString) throws Exception{
+        String[] args = inputString.split(" ");
+        if (args.length > 2) throw new Exception(ERROR_CODES.TOO_MANY_ARGS + "");
+                    String mainArg = args[1];
+                    if (mainArg.equals(OUTPUT_CONSOLE_STRING)) {
+                        outputString = OUTPUT_CONSOLE_STRING;
+                    } else if (mainArg.equals(OUTPUT_HTML_STRING)) {
+                        outputString = OUTPUT_HTML_STRING;
+                        htmlAsciiOutput = new HtmlAsciiOutput(DEFAULTHTMLFILENAME, DEFAULTFONT);
+                    } else {
+                        System.out.println("Did not change output method due to incorrect format.");
+                    }
+    }
+    private void sortWorkingChars() {
+        Collections.sort(workingChars);
+    }
+
+    private int getMinWidthVal() {
+        return Math.max(1, this.currentImage.getWidth()/this.currentImage.getHeight());
     }
 }

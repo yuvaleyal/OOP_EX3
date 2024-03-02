@@ -8,7 +8,9 @@ import java.util.TreeSet;
 
 
 import ascii_art.KeyboardInput;
+import ascii_output.AsciiOutput;
 import ascii_output.HtmlAsciiOutput;
+import ascii_output.OutputFactory;
 import image.Image;
 import image_char_matching.SubImgCharMatcher;
 import image.ImageSetter;
@@ -29,6 +31,7 @@ public class Shell {
     // make it an array / arraylist or any other java collection
     private SubImgCharMatcher workingChars = 
     new SubImgCharMatcher(new char[]{'0','1','2','3','4','5','6','7','8','9'});
+    private AsciiArtAlgorithm asciiArtAlgorithm;
     private boolean validCommandFlag = false;
     private int imageResolution = 128;
     private ImageSetter currentImage;
@@ -54,8 +57,7 @@ public class Shell {
     private final String IMAGE_STRING = "image";
     private final String OUTPUT_STRING_PREFIX = "output";
     private final String START_STRING = "asciiArt";
-    private final String DEFAULTFONT = "Courier New";
-    private final String DEFAULTHTMLFILENAME = "out.html";
+
     
     private enum ERROR_CODES {
         TOO_MANY_ARGS,
@@ -119,7 +121,9 @@ public class Shell {
                     // noodnik you need to add the code that acctully runs this shit, to do that you need to
                     //create a instance of the class asciiArt
                     validCommandFlag = true;
-                    start_cmd();
+                    if (start_cmd() == 0){
+                        continue;
+                    }
                     
                 }
                 
@@ -127,10 +131,11 @@ public class Shell {
                     System.out.println("Did not execute due to incorrect command.");
                 }
             } catch (Exception e) {
-                System.out.println("Error accoured");
+                System.out.println("Did not execute due to incorrect command.");
             }
             System.out.print(PROMPT_STRING);
             inputString = KeyboardInput.readLine();
+            validCommandFlag = false;
         }
     }
 
@@ -138,7 +143,7 @@ public class Shell {
     private void chars_cmd(TreeSet<Character> treeSet){
             for (Character ch:treeSet){
                 System.out.print(ch);
-                System.out.println(" ");
+                System.out.print(" ");
             }
             System.out.println();
         }
@@ -172,7 +177,7 @@ public class Shell {
                     } else if (mainArg.equals(SPACE_STRING)) {
                         workingChars.addChar(' ');
                     } else {
-                        if (mainArg.length() != 1 && !(mainArg.charAt(0) <= END_CHAR) && !(mainArg.charAt(0) >= START_CHAR)) {
+                        if (mainArg.length() != 1 || !(mainArg.charAt(0) <= END_CHAR) || !(mainArg.charAt(0) >= START_CHAR)) {
                             System.out.println("Did not add due to incorrect format.");
                         } else {
                             char letter = mainArg.charAt(0);
@@ -230,7 +235,6 @@ public class Shell {
                     if ( mainArg.equals(RES_DOWN) ) {
                         if ( imageResolution / 2 > getMinWidthVal() ) {
                             imageResolution /= 2;
-                            this.currentImage.updateResulotion(imageResolution);
                             System.out.println("Resolution set to " + imageResolution);
                         } else {
                             System.out.println("Did not change resolution due to exceeding boundaries.");
@@ -238,7 +242,6 @@ public class Shell {
                     } else if ( mainArg.equals(RES_UP) ) {
                         if (imageResolution * 2 > this.currentImage.getWidth()) {
                             imageResolution *= 2;
-                            this.currentImage.updateResulotion(imageResolution);
                             System.out.println("Resolution set to " + imageResolution);
                         } else {
                             System.out.println("Did not change resolution due to exceeding boundaries.");
@@ -267,18 +270,22 @@ public class Shell {
                         outputString = OUTPUT_CONSOLE_STRING;
                     } else if (mainArg.equals(OUTPUT_HTML_STRING)) {
                         outputString = OUTPUT_HTML_STRING;
-                        htmlAsciiOutput = new HtmlAsciiOutput(DEFAULTHTMLFILENAME, DEFAULTFONT);
                     } else {
                         System.out.println("Did not change output method due to incorrect format.");
                     }
     }
 
-    private int start_cmd(){
+    private int start_cmd() throws IOException{
         if (workingChars.getSize() == 0){
             System.out.println("Did not execute. Charset is empty.");
             return 0;
         }
-        
+        this.asciiArtAlgorithm = new AsciiArtAlgorithm(new Image(DEFAULT_IMAGE), imageResolution, workingChars);
+        char[][] result = this.asciiArtAlgorithm.run();
+        OutputFactory factory = new OutputFactory();
+        AsciiOutput output = factory.getOutputMethod(outputString);
+        output.out(result);
+        return 1;
     }
 
     private int getMinWidthVal() {

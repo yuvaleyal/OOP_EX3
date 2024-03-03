@@ -80,6 +80,15 @@ public class ImageSetter {
         return this.height;
     }
 
+    /**
+     * Retrieves the resolution of the image.
+     *
+     * @return The resolution of the image.
+     */
+    public int getResolution() {
+        return imageResolution;
+    }
+
     private int getClosestPowerOfTwo(int num) {
         double logNum = Math.log(num) / Math.log(2);
         return (int) (Math.pow(2, Math.ceil(logNum)));

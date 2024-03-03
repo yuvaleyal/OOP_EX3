@@ -1,6 +1,20 @@
 guytra2205, yuvaleyal
 214987745, 326660610
 
+the subimageshistory class exists to save brightness mementos 
+the subimgcharmatcher handles the logic with the treemap that keeps the chars, it handels
+the brightness and removeing and adding chars, it is used in the asciiartalgorithm as the algorithm
+needs the brigthness of the chars, it is also used in the shell class to add and remove chars.
+the asciiartalgorithm class is used in shell as its the main algorithm that we need to print.
+the keyboardinput class is a class that reads the input of the user.
+the shell class is the class that runs the interaction with the user
+it uses image class, and the subimgcharmatcher class.
+the image class saves the image, and keeps info on the image like width and height.
+the imagesetter class uses the image classand the brightnessMemento class
+ and using it it adds some more functionalyt to it like 
+changing the resolution or getting the subimageresolution.
+the brightness momento class can save the sub image and can get its resolution.
+
 we used the treemap data structure for it has a log(n) time complexity
 for searching inserting and deleting and it sorts the items based on the keys
 they have, the keys we used are the brightness of the chars making it

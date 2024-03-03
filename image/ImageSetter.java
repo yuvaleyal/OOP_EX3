@@ -35,7 +35,7 @@ public class ImageSetter {
         ogWidth = width;
         image = padImage(img);
         history = new SubImagesHistory();
-        imageResolution = 1;
+        updateResulotion(1);
     }
 
     /**

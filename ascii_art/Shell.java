@@ -278,7 +278,7 @@ public class Shell {
         int curResolution = currentImage.getResolution();
         // Resolution set to
         if (mainArg.equals(RES_DOWN)) {
-            if (curResolution / 2 > getMinWidthVal()) {
+            if (curResolution / 2 <= getMinWidthVal()) {
                 curResolution /= 2;
                 currentImage.updateResulotion(curResolution);
                 System.out.println(SET_RES_MESSEGE + curResolution);
@@ -311,6 +311,7 @@ public class Shell {
             Image test = new Image(mainArg);
             this.image = test;
             this.currentImage = new ImageSetter(test);
+            this.currentImage.updateResulotion(DEFAULT_RESOLUTION);
         } catch (Exception e) {
             System.out.println(IMAGE_CMD_ERROR);
         }
@@ -353,6 +354,6 @@ public class Shell {
     }
 
     private int getMinWidthVal() {
-        return Math.max(1, this.currentImage.getWidth() / this.currentImage.getHeight());
+        return Math.min(this.currentImage.getWidth(), this.currentImage.getHeight());
     }
 }

@@ -63,7 +63,6 @@ public class Shell {
     private final String IMAGE_CMD_ERROR = "Did not execute due to problem with image file.";
     private final String OUTPUT_ERROR = "Did not change output method due to incorrect format.";
     private final String EMPTY_CHARSET_ERROR = "Did not execute. Charset is empty.";
-    private static final int DEFAULT_RESOLUTION = 128;
     private Image image;
 
     private enum ERROR_CODES {

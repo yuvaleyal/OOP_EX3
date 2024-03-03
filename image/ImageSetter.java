@@ -15,6 +15,7 @@ public class ImageSetter {
     private static final double GREEN_MULTIPICATOR = 0.7152;
     private static final double BLUE_MULTIPICATOR = 0.0722;
     private static final int MAX_RGB_VALUE = 255;
+    private static final int DEFAULT_RESOLUTION = 128;
 
     /**
      * Constructs a new ImageSetter instance with the specified image.
@@ -27,7 +28,7 @@ public class ImageSetter {
         width = getClosestPowerOfTwo(img.getWidth());
         image = padImage(img);
         history = new SubImagesHistory();
-        imageResolution = 1;
+        imageResolution = DEFAULT_RESOLUTION;
     }
 
     /**

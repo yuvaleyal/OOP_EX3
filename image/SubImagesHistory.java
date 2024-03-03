@@ -3,6 +3,9 @@ package image;
 import java.util.TreeMap;
 import image.ImageSetter.BrightnessMemento;
 
+/**
+ * Represents a class to store the history of brightness mementos for different resolutions.
+ */
 public class SubImagesHistory {
     private TreeMap<Integer, BrightnessMemento> history;
 

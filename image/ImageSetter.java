@@ -2,6 +2,9 @@ package image;
 
 import java.awt.Color;
 
+/**
+ * Represents a class responsible for processing and managing images for ASCII art generation.
+ */
 public class ImageSetter {
     private Image image;
     private int height;

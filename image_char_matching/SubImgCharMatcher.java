@@ -5,6 +5,9 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+/**
+ * Represents a class for matching characters to image brightness values.
+ */
 public class SubImgCharMatcher {
     private TreeMap<Character, Double> charBrightnessMap;
     private TreeMap<Character, Double> defaultBrightness;

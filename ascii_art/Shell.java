@@ -8,8 +8,8 @@ import java.util.TreeSet;
 
 import ascii_art.KeyboardInput;
 import ascii_output.AsciiOutput;
+import ascii_output.ConsoleAsciiOutput;
 import ascii_output.HtmlAsciiOutput;
-import ascii_output.OutputFactory;
 import image.Image;
 import image_char_matching.SubImgCharMatcher;
 import image.ImageSetter;
@@ -63,22 +63,38 @@ public class Shell {
     private final String IMAGE_CMD_ERROR = "Did not execute due to problem with image file.";
     private final String OUTPUT_ERROR = "Did not change output method due to incorrect format.";
     private final String EMPTY_CHARSET_ERROR = "Did not execute. Charset is empty.";
+    private final String DEFAULTFONT = "Courier New";
+    private final String DEFAULTHTMLFILENAME = "out.html";
     private Image image;
 
     private enum ERROR_CODES {
         TOO_MANY_ARGS, INVALID_ARGS,
     }
 
+    /**
+     * The main method to execute the program.
+     *
+     * @param args Command-line arguments passed to the program.
+     * @throws Exception If an error occurs during program execution.
+     */
     public static void main(String[] args) throws Exception {
         Shell s = new Shell();
         s.run();
     }
 
+    /**
+     * Constructs a new Shell object with a default image.
+     * @throws IOException If an I/O error occurs while reading the default image.
+     */
     public Shell() throws IOException {
         this.currentImage = new ImageSetter(new Image(DEFAULT_IMAGE));
         this.image = new Image(DEFAULT_IMAGE);
     }
 
+    /**
+     * Executes the main loop of the program, waiting for user input and processing commands.
+     * @throws Exception If an error occurs during program execution.
+     */
     public void run() throws Exception {
         System.out.print(PROMPT_STRING);
         String inputString = KeyboardInput.readLine();
@@ -296,8 +312,13 @@ public class Shell {
                 currentImage.getResolution(),
                 workingChars);
         char[][] result = this.asciiArtAlgorithm.run();
-        OutputFactory factory = new OutputFactory();
-        AsciiOutput output = factory.getOutputMethod(outputString);
+        AsciiOutput output;
+        if (outputString == OUTPUT_CONSOLE_STRING){
+            output = new ConsoleAsciiOutput();
+        }
+        else{
+            output = new HtmlAsciiOutput(DEFAULTHTMLFILENAME,DEFAULTFONT);
+        }
         output.out(result);
         return 1;
     }

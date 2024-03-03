@@ -4,6 +4,9 @@ import image.Image;
 import image.ImageSetter;
 import image_char_matching.SubImgCharMatcher;
 
+/**
+ * Represents an algorithm to generate ASCII art from an input image.
+ */
 public class AsciiArtAlgorithm {
     private ImageSetter image;
     private SubImgCharMatcher charSet;

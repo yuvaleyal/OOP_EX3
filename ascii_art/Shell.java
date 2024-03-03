@@ -74,8 +74,10 @@ public class Shell {
     /**
      * The main method to execute the program.
      *
-     * @param args Command-line arguments passed to the program.
-     * @throws Exception If an error occurs during program execution.
+     * @param args
+     *            Command-line arguments passed to the program.
+     * @throws Exception
+     *             If an error occurs during program execution.
      */
     public static void main(String[] args) throws Exception {
         Shell s = new Shell();
@@ -84,7 +86,9 @@ public class Shell {
 
     /**
      * Constructs a new Shell object with a default image.
-     * @throws IOException If an I/O error occurs while reading the default image.
+     * 
+     * @throws IOException
+     *             If an I/O error occurs while reading the default image.
      */
     public Shell() throws IOException {
         this.currentImage = new ImageSetter(new Image(DEFAULT_IMAGE));
@@ -92,8 +96,11 @@ public class Shell {
     }
 
     /**
-     * Executes the main loop of the program, waiting for user input and processing commands.
-     * @throws Exception If an error occurs during program execution.
+     * Executes the main loop of the program, waiting for user input and processing
+     * commands.
+     * 
+     * @throws Exception
+     *             If an error occurs during program execution.
      */
     public void run() throws Exception {
         System.out.print(PROMPT_STRING);
@@ -259,6 +266,7 @@ public class Shell {
         if (mainArg.equals(RES_DOWN)) {
             if (curResolution / 2 > getMinWidthVal()) {
                 curResolution /= 2;
+                currentImage.updateResulotion(curResolution);
                 System.out.println(SET_RES_MESSEGE + curResolution);
             } else {
                 System.out.println(RES_BOUNDARIES_ERROR);
@@ -266,6 +274,7 @@ public class Shell {
         } else if (mainArg.equals(RES_UP)) {
             if (curResolution * 2 > this.currentImage.getWidth()) {
                 curResolution *= 2;
+                currentImage.updateResulotion(curResolution);
                 System.out.println(SET_RES_MESSEGE + curResolution);
             } else {
                 System.out.println(RES_BOUNDARIES_ERROR);
@@ -313,11 +322,10 @@ public class Shell {
                 workingChars);
         char[][] result = this.asciiArtAlgorithm.run();
         AsciiOutput output;
-        if (outputString == OUTPUT_CONSOLE_STRING){
+        if (outputString == OUTPUT_CONSOLE_STRING) {
             output = new ConsoleAsciiOutput();
-        }
-        else{
-            output = new HtmlAsciiOutput(DEFAULTHTMLFILENAME,DEFAULTFONT);
+        } else {
+            output = new HtmlAsciiOutput(DEFAULTHTMLFILENAME, DEFAULTFONT);
         }
         output.out(result);
         return 1;

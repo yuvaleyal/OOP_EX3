@@ -90,13 +90,18 @@ public class SubImgCharMatcher {
     public void removeChar(char c) {
         double cBrightness = charBrightnessMap.get(c);
         charBrightnessMap.remove(c);
-        if (cBrightness == maxBrightness) {
-            updateMaxBrightness();
-            normalValues();
-        }
-        if (cBrightness == minBrightness) {
-            updateMinBrightness();
-            normalValues();
+        if (charBrightnessMap.size() == 0) {
+            minBrightness = MAX_BRIGHTNESS;
+            maxBrightness = 0;
+        } else {
+            if (cBrightness == maxBrightness) {
+                updateMaxBrightness();
+                normalValues();
+            }
+            if (cBrightness == minBrightness) {
+                updateMinBrightness();
+                normalValues();
+            }
         }
     }
 
@@ -125,7 +130,7 @@ public class SubImgCharMatcher {
     public void removeAllChars() {
         charBrightnessMap = new TreeMap<Character, Double>();
         defaultBrightness = new TreeMap<Character, Double>();
-        minBrightness = 1;
+        minBrightness = MAX_BRIGHTNESS;
         maxBrightness = 0;
     }
 

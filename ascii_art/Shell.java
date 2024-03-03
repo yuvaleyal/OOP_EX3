@@ -40,7 +40,7 @@ public class Shell {
     private final int END_VALUE = 126;
     private final char START_CHAR = (char) START_VALUE;
     private final char END_CHAR = (char) END_VALUE;
-    private final String DEFAULT_IMAGE = "examples\\cat.jpeg";
+    private final String DEFAULT_IMAGE = "cat.jpeg";
     private final String SPACE_STRING = "space";
     private final String ALL_STRING = "all";
     private final String PROMPT_STRING = ">>> ";
@@ -184,29 +184,35 @@ public class Shell {
             if (first == last) {
                 System.out.println(ADD_ERROR);
                 return 1;
-            } else {
+            }
+            else {
                 if (first < last) {
                     for (char letter = first; letter <= last; letter++) {
                         workingChars.addChar(letter);
                     }
-                } else {
+                }
+                else {
                     for (char letter = first; letter >= last; letter--) {
                         workingChars.addChar(letter);
                     }
                 }
             }
-        } else if (mainArg.equals(ALL_STRING)) {
+        }
+        else if (mainArg.equals(ALL_STRING)) {
             // 32-126
             for (char letter = START_CHAR; letter <= END_CHAR; letter++) {
                 workingChars.addChar(letter);
             }
-        } else if (mainArg.equals(SPACE_STRING)) {
+        }
+        else if (mainArg.equals(SPACE_STRING)) {
             workingChars.addChar(' ');
-        } else {
+        }
+        else {
             if (mainArg.length() != 1 || !(mainArg.charAt(0) <= END_CHAR)
                     || !(mainArg.charAt(0) >= START_CHAR)) {
                 System.out.println(ADD_ERROR);
-            } else {
+            }
+            else {
                 char letter = mainArg.charAt(0);
                 workingChars.addChar(letter);
             }
@@ -227,28 +233,34 @@ public class Shell {
                 if (first == last) {
                     System.out.println(REMOVE_ERROR);
                     return 1;
-                } else {
+                }
+                else {
                     if (first < last) {
                         for (char letter = first; letter <= last; letter++) {
                             workingChars.removeChar(letter);
                         }
-                    } else {
+                    }
+                    else {
                         for (char letter = first; letter >= last; letter--) {
                             workingChars.removeChar(letter);
                         }
                     }
                 }
             }
-        } else if (mainArg.equals(ALL_STRING)) {
+        }
+        else if (mainArg.equals(ALL_STRING)) {
             // 32-124
             workingChars.removeAllChars();
-        } else if (mainArg.equals(SPACE_STRING)) {
+        }
+        else if (mainArg.equals(SPACE_STRING)) {
             workingChars.removeChar(' ');
-        } else {
+        }
+        else {
             if (mainArg.length() != 1 && !(mainArg.charAt(0) <= END_CHAR)
                     && !(mainArg.charAt(0) >= START_CHAR)) {
                 System.out.println(REMOVE_ERROR);
-            } else {
+            }
+            else {
                 char letter = mainArg.charAt(0);
                 workingChars.removeChar(letter);
             }
@@ -268,18 +280,22 @@ public class Shell {
                 curResolution /= 2;
                 currentImage.updateResulotion(curResolution);
                 System.out.println(SET_RES_MESSEGE + curResolution);
-            } else {
+            }
+            else {
                 System.out.println(RES_BOUNDARIES_ERROR);
             }
-        } else if (mainArg.equals(RES_UP)) {
+        }
+        else if (mainArg.equals(RES_UP)) {
             if (curResolution * 2 > this.currentImage.getWidth()) {
                 curResolution *= 2;
                 currentImage.updateResulotion(curResolution);
                 System.out.println(SET_RES_MESSEGE + curResolution);
-            } else {
+            }
+            else {
                 System.out.println(RES_BOUNDARIES_ERROR);
             }
-        } else {
+        }
+        else {
             System.out.println(RES_FORMAT_ERROR);
         }
     }
@@ -305,9 +321,11 @@ public class Shell {
         String mainArg = args[1];
         if (mainArg.equals(OUTPUT_CONSOLE_STRING)) {
             outputString = OUTPUT_CONSOLE_STRING;
-        } else if (mainArg.equals(OUTPUT_HTML_STRING)) {
+        }
+        else if (mainArg.equals(OUTPUT_HTML_STRING)) {
             outputString = OUTPUT_HTML_STRING;
-        } else {
+        }
+        else {
             System.out.println(OUTPUT_ERROR);
         }
     }
@@ -324,7 +342,8 @@ public class Shell {
         AsciiOutput output;
         if (outputString == OUTPUT_CONSOLE_STRING) {
             output = new ConsoleAsciiOutput();
-        } else {
+        }
+        else {
             output = new HtmlAsciiOutput(DEFAULTHTMLFILENAME, DEFAULTFONT);
         }
         output.out(result);

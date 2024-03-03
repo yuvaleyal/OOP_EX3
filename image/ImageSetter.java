@@ -3,12 +3,15 @@ package image;
 import java.awt.Color;
 
 /**
- * Represents a class responsible for processing and managing images for ASCII art generation.
+ * Represents a class responsible for processing and managing images for ASCII
+ * art generation.
  */
 public class ImageSetter {
     private Image image;
     private int height;
+    private int ogHeight;
     private int width;
+    private int ogWidth;
     private int subImageSize;
     private int imageResolution;
     private double[][] brightnessArray;
@@ -29,6 +32,8 @@ public class ImageSetter {
     public ImageSetter(Image img) {
         height = getClosestPowerOfTwo(img.getHeight());
         width = getClosestPowerOfTwo(img.getWidth());
+        ogHeight = height;
+        ogWidth = width;
         image = padImage(img);
         history = new SubImagesHistory();
         imageResolution = DEFAULT_RESOLUTION;
@@ -51,7 +56,8 @@ public class ImageSetter {
         if (brightnessArrayMemento == null) {
             brightnessArray = new double[res][height / subImageSize];
             updateBrightnessArray();
-        } else {
+        }
+        else {
             brightnessArray = brightnessArrayMemento.brightnessArray;
         }
     }
@@ -72,7 +78,7 @@ public class ImageSetter {
      * @return The width of the image.
      */
     public int getWidth() {
-        return this.width;
+        return this.ogWidth;
     }
 
     /**
@@ -81,7 +87,7 @@ public class ImageSetter {
      * @return The height of the image.
      */
     public int getHeight() {
-        return this.height;
+        return this.ogHeight;
     }
 
     /**

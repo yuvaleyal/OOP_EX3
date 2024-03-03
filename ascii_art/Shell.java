@@ -286,7 +286,7 @@ public class Shell {
             }
         }
         else if (mainArg.equals(RES_UP)) {
-            if (curResolution * 2 > this.currentImage.getWidth()) {
+            if (curResolution * 2 <= this.currentImage.getWidth()) {
                 curResolution *= 2;
                 currentImage.updateResulotion(curResolution);
                 System.out.println(SET_RES_MESSEGE + curResolution);

@@ -65,6 +65,7 @@ public class Shell {
     private final String EMPTY_CHARSET_ERROR = "Did not execute. Charset is empty.";
     private final String DEFAULTFONT = "Courier New";
     private final String DEFAULTHTMLFILENAME = "out.html";
+    private static final int DEFAULT_RESOLUTION = 128;
     private Image image;
 
     private enum ERROR_CODES {
@@ -92,6 +93,7 @@ public class Shell {
      */
     public Shell() throws IOException {
         this.currentImage = new ImageSetter(new Image(DEFAULT_IMAGE));
+        this.currentImage.updateResulotion(DEFAULT_RESOLUTION);
         this.image = new Image(DEFAULT_IMAGE);
     }
 

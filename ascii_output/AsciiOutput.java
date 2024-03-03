@@ -9,5 +9,5 @@ public interface AsciiOutput {
     /**
      * Output the specified 2D array of chars
      */
-    void out(char[][] chars);
+    void output(char[][] chars);
 }

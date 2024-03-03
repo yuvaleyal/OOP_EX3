@@ -22,7 +22,7 @@ public class HtmlAsciiOutput implements AsciiOutput {
     }
 
     @Override
-    public void out(char[][] chars) {
+    public void output(char[][] chars) {
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
             writer.write(String.format(
                 "<!DOCTYPE html>\n"+

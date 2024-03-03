@@ -310,8 +310,9 @@ public class Shell {
         try {
             Image test = new Image(mainArg);
             this.image = test;
+            int res = this.currentImage.getResolution();
             this.currentImage = new ImageSetter(test);
-            this.currentImage.updateResulotion(DEFAULT_RESOLUTION);
+            this.currentImage.updateResulotion(res);
         } catch (Exception e) {
             System.out.println(IMAGE_CMD_ERROR);
         }
